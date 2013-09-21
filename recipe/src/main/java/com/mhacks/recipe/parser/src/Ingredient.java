@@ -17,10 +17,9 @@ public abstract class Ingredient
 
     private String name;
     private String adj;
-    private String units;
-    private double qOriginal; // In written units.
-    private double qRemaining; // In kilograms/liters.
+    private String quantity;
     private boolean consumed;
+    protected ArrayList<String> unitList;
 
 
     // --- Constructors ---
@@ -29,40 +28,20 @@ public abstract class Ingredient
      * Defines the all of the properties of an ingredient.
      * @param name  The name of the ingredient.
      * @param adj  Descriptive modifiers for the ingredient.
-     * @param units  The units the ingredient is measured in.
-     * @param qOriginal  The amount of ingredient there originally is for this recipe.
+     * @param quantity  The amount and units of the ingredient.
      */
-    // &frac12 -> 1/2
-    public Ingredient(String name, String adj, String units, double qOriginal)
+    public Ingredient(String name, String adj, String quantity)
     {
         this.name = name;
         this.adj = adj;
-        this.units = units;
-        this.qOriginal = qOriginal;
-        this.qRemaining = qOriginal;
+        this.quantity = quantity;
         this.consumed = false;
     }
 
-    /**
-     * Defines the most of the properties of an ingredient.
-     * @param name  The name of the ingredient.
-     * @param units  The units the ingredient is measured in.
-     * @param qOriginal  The amount of ingredient there originally is for this recipe.
-     */
-    public Ingredient(String name, String units, double qOriginal)
+    public Ingredient()
     {
-        this(name, "", units, qOriginal);
-    }
 
-    /**
-     * Defines only the name of an ingredient.
-     * @param name  The name of the ingredient.
-     */
-    public Ingredient(String name)
-    {
-        this(name, "", -1);
     }
-
 
     // --- Methods ---
 
@@ -74,6 +53,13 @@ public abstract class Ingredient
         return this.name;
     }
 
+    protected void setName(String name)
+    {
+        this.name = name;
+    }
+
+    protected abstract String getName(String input);
+
     /**
      * @return  The adjectives of the ingredient.
      */
@@ -82,55 +68,34 @@ public abstract class Ingredient
         return this.adj;
     }
 
+    protected void setAdj(String adj)
+    {
+        this.adj = adj;
+    }
+
+    // protected abstract String getAdj(String input);
+
     /**
      * @return  The units of the ingredient.
      */
-    public String getUnits()
+    public String getQuantity()
     {
-        return this.units;
+        return this.quantity;
     }
 
-    /**
-     * @return  The original quantity of the ingredient.
-     */
-    public double getQOriginal()
+    protected void setQuantity(String quantity)
     {
-        return this.qOriginal;
+        this.quantity = quantity;
     }
 
-    /**
-     * @return  The remianing quantity of the ingredient.
-     */
-    public double getQRemaining()
-    {
-        return this.qRemaining;
-    }
-
-    /**
-     * "Expends" a certain amount of the ingredient
-     * @param qUsed  The quantity of the ingredient to be used.
-     */
-    public void use(double qUsed)
-    {
-        if (qRemaining - qUsed < 0 && qRemaining != -1)
-        {
-            // TODO handle error.
-        }
-        else
-        {
-            qRemaining -= qUsed;
-            if (qRemaining == 0)
-                this.setConsumedTrue();
-        }
-    }
+    protected abstract String getQuantity(String input);
 
     /**
      * "Expends" all of the ingredient.
      */
-    public void useAll()
+    public void use()
     {
-        qRemaining = 0;
-        this.setConsumedTrue();
+        this.consumed = true;
     }
 
     /**
@@ -142,12 +107,40 @@ public abstract class Ingredient
         return consumed;
     }
 
-    /**
-     * Sets consumed to true. Called from other methods
-     * in which the ingredient may have been consumed.
-     */
-    private void setConsumedTrue()
+    protected void initUnitList()
     {
-        consumed = true;
+        unitList = new ArrayList<String>();
+        unitList.add("ounce"); // PL
+        unitList.add("oz");
+        unitList.add("gram");// PL
+        unitList.add("g");
+        unitList.add("cup");// PL
+        unitList.add("c");
+        unitList.add("fl oz");
+        unitList.add("fl ounce");// PL
+        unitList.add("fluid oz");
+        unitList.add("fluid ounce");// PL
+        unitList.add("pint");// PL
+        unitList.add("pt");
+        unitList.add("p");
+        unitList.add("milliliter"); // PL
+        unitList.add("millilitre"); // PL
+        unitList.add("ml");
+        unitList.add("liter"); // PL
+        unitList.add("litre"); // PL
+        unitList.add("L");
+        unitList.add("kilogram"); // PL
+        unitList.add("kg");
+        unitList.add("teaspoon"); // PL
+        unitList.add("tsp"); // PL
+        unitList.add("dessert spoon"); // PL
+        unitList.add("tablespoon"); // PL
+        unitList.add("tbsp"); // PL
+        unitList.add("\"");
+        unitList.add("inch");
+        unitList.add("inches");
+        unitList.add("in");
+        unitList.add("centimeter"); // PL
+        unitList.add("cm");
     }
 }
