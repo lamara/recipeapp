@@ -52,6 +52,7 @@ class KeywordTest {
         try {
             String line = null;
 
+
             while ((line = input.readLine()) != null) {
                 contents.append(line);
                 contents.append(System.getProperty("line.separator"));
@@ -59,6 +60,7 @@ class KeywordTest {
         } finally {
             input.close();
         }
+
 
         return contents.toString();
     }
