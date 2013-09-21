@@ -130,7 +130,18 @@ public class WikiEndpoint {
     public static ArrayList<String> getInstructionList(Document document) {
         ArrayList<String> results = getMiseEnPlaceInstructions(document);
 
+
         Elements ingredients = document.select("span[itemprop$=" + INSTRUCTION_TAG + "]");
+        //sometimes recipes have multiple sub recipes, but that's hard to parse so lets only take the
+        //first recipe in the document. This can horribly break though on some recipe types.
+        /*
+        Element first = ingredients.first();
+        System.out.println("First: " + first);
+        System.out.println("Parent: " + first.parent());
+        ingredients = first.parent().siblingElements();
+        ingredients.add(0, first); //siblings don't include the original element
+        */
+
         for (Element element : ingredients) {
             results.add(element.text());
             System.out.println(element.text());
