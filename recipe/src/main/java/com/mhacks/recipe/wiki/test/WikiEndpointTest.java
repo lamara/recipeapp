@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.*;
 
+
 /**
  * Created by Alex on 9/21/13.
  */
@@ -38,7 +39,7 @@ public class WikiEndpointTest {
 
     @Test
     public void testGetInstructionList() throws IOException, JSONException {
-        WikiEndpoint.getInstructionList(WikiEndpoint.getPageHtml("Leek_and_mince_casserole", "http://www.cookipedia.co.uk/wiki/"));
+        WikiEndpoint.getInstructionList(WikiEndpoint.getPageHtml("egg fried rice", "http://www.cookipedia.co.uk/wiki/"));
     }
 
     @Test
