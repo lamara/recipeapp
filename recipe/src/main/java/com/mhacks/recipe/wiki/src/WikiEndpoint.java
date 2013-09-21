@@ -8,17 +8,28 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.*;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  * Created by Alex on 9/21/13.
  */
 public class WikiEndpoint {
+
+    private static final String INGREDIENT_HEADER = "Ingredients";
+    private static final String MISE_EN_PLACE_HEADER = "Mise_en_place";
+    private static final String METHOD_HEADER = "Method";
+
+    private static final String INGREDIENT_TAG = "ingredients";
+    private static final String INSTRUCTION_TAG = "recipeInstructions";
 
     public static void main(String[] args) {
         System.out.println("hey");
@@ -30,6 +41,8 @@ public class WikiEndpoint {
      * @return a list of all of the titles relevant to the search
      */
     public static String[] search(String search, String wikiUrl) throws IOException, JSONException {
+        //TODO decide whether to normalize input (atm unicode characters will just get dropped), an issue
+        //because some unicode doesn't normalize that well
         search = sanitizeInput(search);
         search = URLEncoder.encode(search, "UTF-8");
 
@@ -54,9 +67,9 @@ public class WikiEndpoint {
         return titles;
     }
 
-    public static String getPageText(String title, String wikiUrl) throws IOException, JSONException {
+    public static Document getPageHtml(String title, String wikiUrl) throws IOException, JSONException {
         title = URLEncoder.encode(title, "UTF-8");
-        URL url = new URL(wikiUrl + "api.php?format=json&action=query&prop=revisions&titles=" + title + "&rvprop=timestamp&rvparse");
+        URL url = new URL(wikiUrl + "api.php?format=json&action=query&prop=revisions&titles=" + title + "&rvprop=content&rvparse&redirects");
         URLConnection connection = url.openConnection();
 
         JSONObject json = new JSONObject(readFromInput(connection.getInputStream()));
@@ -76,12 +89,83 @@ public class WikiEndpoint {
             page = null;
             //TODO handle page not being found
         }
-        String html = page.optJSONArray("revisions").optJSONObject(0).optString("timestamp");
-        System.out.println(html);
+        String html = page.optJSONArray("revisions").optJSONObject(0).optString("*");
+
+        Document document = Jsoup.parse(html);
+        System.out.println(document);
+
+        return document;
+    }
 
 
-        //String html = json.optJSONObject("query").optJSONObject("pages").optJSONObject
-        return html;
+    public static ArrayList<String> getIngredientList(Document document) {
+
+        //The html structure is a little wonky but the gist of it is that we are going to capture
+        //all of the text bodies in between the "ingredients" and "mis en place" or "method" headers,
+        //depending on whether or not mis en place exists in the recipe
+        Elements ingredients = document.select("span[itemprop$=" + INGREDIENT_TAG + "]");
+        System.out.println("size: " + ingredients.size());
+
+
+        ArrayList<String> results = new ArrayList<String>(ingredients.size());
+        for (Element element : ingredients) {
+            //we are making the assumption that every ingredient has a hyperlink associated with it
+            //(this is true like 95% of the time)
+            String line = element.text();
+            String ingredient = element.select("a[href]").text();
+            if (ingredient != null && ingredient.length() > 0) {
+                //denoting the ingredient with the ^ character for later parsing.
+                line = line.replace(ingredient, "^" + ingredient + "^");
+            }
+
+            results.add(line);
+            System.out.println(line);
+        }
+
+
+        return results;
+
+    }
+
+    public static ArrayList<String> getInstructionList(Document document) {
+        ArrayList<String> results = getMiseEnPlaceInstructions(document);
+
+        Elements ingredients = document.select("span[itemprop$=" + INSTRUCTION_TAG + "]");
+        for (Element element : ingredients) {
+            results.add(element.text());
+            System.out.println(element.text());
+        }
+        return results;
+    }
+
+    public static ArrayList<String> getMiseEnPlaceInstructions(Document document) {
+        //we have to parse these the old fashioned way because cookipedia's document heirarchy is awful
+        String html = document.toString();
+        String[] lines = html.split("\n");
+        int miseEnPlaceIndex = -1;
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            if (line.contains(MISE_EN_PLACE_HEADER)) {
+                miseEnPlaceIndex = i;
+                break;
+            }
+        }
+        if (miseEnPlaceIndex == -1) {
+            return new ArrayList<String>();
+        }
+
+        ArrayList<String> results = new ArrayList<String>();
+        String line = lines[miseEnPlaceIndex];
+        while (!line.contains(METHOD_HEADER) && miseEnPlaceIndex < lines.length) {
+            if (line.contains("<li>")) {
+                String instruction = Jsoup.parse(line).text();
+                results.add(instruction);
+                System.out.println(instruction);
+            }
+            miseEnPlaceIndex++;
+            line = lines[miseEnPlaceIndex];
+        }
+        return results;
     }
 
     /**

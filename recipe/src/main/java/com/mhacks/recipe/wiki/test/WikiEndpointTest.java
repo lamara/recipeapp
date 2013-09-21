@@ -23,7 +23,22 @@ public class WikiEndpointTest {
 
     @Test
     public void testGetPageText() throws IOException, JSONException {
-        System.out.println(WikiEndpoint.getPageText("egg fried rice", "http://www.cookipedia.co.uk/wiki/"));
+        System.out.println(WikiEndpoint.getPageHtml("Plain_buttered_couscous", "http://www.cookipedia.co.uk/wiki/"));
+    }
+
+    @Test
+    public void testGetIngredients() throws IOException, JSONException {
+        WikiEndpoint.getIngredientList(WikiEndpoint.getPageHtml("Plain buttered couscous", "http://www.cookipedia.co.uk/wiki/"));
+    }
+
+    @Test
+    public void testGetMiseEnPlaceInstructions() throws IOException, JSONException {
+        WikiEndpoint.getMiseEnPlaceInstructions(WikiEndpoint.getPageHtml("Leek_and_mince_casserole", "http://www.cookipedia.co.uk/wiki/"));
+    }
+
+    @Test
+    public void testGetInstructionList() throws IOException, JSONException {
+        WikiEndpoint.getInstructionList(WikiEndpoint.getPageHtml("Leek_and_mince_casserole", "http://www.cookipedia.co.uk/wiki/"));
     }
 
     @Test
