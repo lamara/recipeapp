@@ -3,6 +3,7 @@ package com.mhacks.recipe.wiki.test;
 
 
         import com.mhacks.recipe.alchemy.api.AlchemyAPI;
+        import com.mhacks.recipe.parser.src.Keyword;
 
         import org.xml.sax.SAXException;
         import org.w3c.dom.Document;
@@ -19,6 +20,7 @@ class KeywordTest {
     public static void main(String[] args) throws IOException, SAXException,
             ParserConfigurationException, XPathExpressionException {
         // Create an AlchemyAPI object.
+        // api key is temporary ok so don't use it
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromString("2094dd01fd7cbceb7e1bb916840e40e81f25d16f");
 
         // Extract topic keywords for a web URL.
@@ -30,6 +32,12 @@ class KeywordTest {
                 "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
                         "Where do you live, Fred?");
         System.out.println(getStringFromDocument(doc));
+
+        Keyword[] keywords = Keyword.getKeywordsFromText("Hello there, my name is Bob Jones.  I live in the United States of America.  " +
+                "Where do you live, Fred?");
+        for (Keyword keyword : keywords) {
+            System.out.println(keyword);
+        }
     }
 
     // utility function
