@@ -15,62 +15,20 @@ public abstract class Ingredient
 {
     // --- Fields ---
 
-    private String name;
-    private String adj;
-    private String quantity;
-    private boolean consumed;
-    protected ArrayList<String> unitList;
+    protected String ingredient;
+    protected String quantity;
 
 
-    // --- Constructors ---
 
-    /**
-     * Defines the all of the properties of an ingredient.
-     * @param name  The name of the ingredient.
-     * @param adj  Descriptive modifiers for the ingredient.
-     * @param quantity  The amount and units of the ingredient.
-     */
-    public Ingredient(String name, String adj, String quantity)
-    {
-        this.name = name;
-        this.adj = adj;
-        this.quantity = quantity;
-        this.consumed = false;
-    }
-
-    public Ingredient()
-    {
-
-    }
-
+    protected static final Set<String> UNITS = initUnits();
     // --- Methods ---
 
     /**
      * @return  The name of the ingredient.
      */
-    public String getName()
+    public String getIngredient()
     {
-        return this.name;
-    }
-
-    protected void setName(String name)
-    {
-        this.name = name;
-    }
-
-    protected abstract String getName(String input);
-
-    /**
-     * @return  The adjectives of the ingredient.
-     */
-    public String getAdj()
-    {
-        return this.adj;
-    }
-
-    protected void setAdj(String adj)
-    {
-        this.adj = adj;
+        return this.ingredient;
     }
 
     // protected abstract String getAdj(String input);
@@ -83,64 +41,43 @@ public abstract class Ingredient
         return this.quantity;
     }
 
-    protected void setQuantity(String quantity)
+    protected static Set<String> initUnits()
     {
-        this.quantity = quantity;
-    }
+        Set<String> set = new HashSet<String>();
 
-    protected abstract String getQuantity(String input);
+        set.add("ounce"); // PL
+        set.add("oz");
+        set.add("gram");// PL
+        set.add("g");
+        set.add("cup");// PL
+        set.add("c");
+        set.add("fl oz");
+        set.add("fl ounce");// PL
+        set.add("fluid oz");
+        set.add("fluid ounce");// PL
+        set.add("pint");// PL
+        set.add("pt");
+        set.add("p");
+        set.add("milliliter"); // PL
+        set.add("millilitre"); // PL
+        set.add("ml");
+        set.add("liter"); // PL
+        set.add("litre"); // PL
+        set.add("L");
+        set.add("kilogram"); // PL
+        set.add("kg");
+        set.add("teaspoon"); // PL
+        set.add("tsp"); // PL
+        set.add("dessert spoon"); // PL
+        set.add("tablespoon"); // PL
+        set.add("tbsp"); // PL
+        set.add("\"");
+        set.add("inch");
+        set.add("inches");
+        set.add("in");
+        set.add("centimeter"); // PL
+        set.add("cm");
 
-    /**
-     * "Expends" all of the ingredient.
-     */
-    public void use()
-    {
-        this.consumed = true;
-    }
-
-    /**
-     * @return   true if all of the ingredient has been used in the recipe,
-     *			 false if otherwise
-     */
-    public boolean isConsumed()
-    {
-        return consumed;
-    }
-
-    protected void initUnitList()
-    {
-        unitList = new ArrayList<String>();
-        unitList.add("ounce"); // PL
-        unitList.add("oz");
-        unitList.add("gram");// PL
-        unitList.add("g");
-        unitList.add("cup");// PL
-        unitList.add("c");
-        unitList.add("fl oz");
-        unitList.add("fl ounce");// PL
-        unitList.add("fluid oz");
-        unitList.add("fluid ounce");// PL
-        unitList.add("pint");// PL
-        unitList.add("pt");
-        unitList.add("p");
-        unitList.add("milliliter"); // PL
-        unitList.add("millilitre"); // PL
-        unitList.add("ml");
-        unitList.add("liter"); // PL
-        unitList.add("litre"); // PL
-        unitList.add("L");
-        unitList.add("kilogram"); // PL
-        unitList.add("kg");
-        unitList.add("teaspoon"); // PL
-        unitList.add("tsp"); // PL
-        unitList.add("dessert spoon"); // PL
-        unitList.add("tablespoon"); // PL
-        unitList.add("tbsp"); // PL
-        unitList.add("\"");
-        unitList.add("inch");
-        unitList.add("inches");
-        unitList.add("in");
-        unitList.add("centimeter"); // PL
-        unitList.add("cm");
+        return set;
     }
 }

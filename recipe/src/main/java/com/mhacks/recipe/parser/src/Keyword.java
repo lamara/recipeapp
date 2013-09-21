@@ -7,6 +7,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -49,23 +51,25 @@ public class Keyword {
      * @throws ParserConfigurationException
      * @throws XPathExpressionException
      */
-    public static Keyword[] getKeywordsFromText(String text) throws IOException, SAXException,
+    public static Set<String> getKeywordsFromText(String text) throws IOException, SAXException,
             ParserConfigurationException, XPathExpressionException {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromString("2094dd01fd7cbceb7e1bb916840e40e81f25d16f");
 
         Document doc = alchemyObj.TextGetRankedKeywords(text);
 
-        return getKeywordsFromDocument(doc);
+        String[] keywords = getKeywordsFromDocument(doc);
+        Set<String> set = new HashSet<String>();
+        for (String str : keywords) {
+            set.add(str);
+        }
+        return set;
     }
 
-    private static Keyword[] getKeywordsFromDocument(Document document) {
+    private static String[] getKeywordsFromDocument(Document document) {
         NodeList words = document.getElementsByTagName("text");
-        NodeList relevances = document.getElementsByTagName("relevance");
-        Keyword[] keywords = new Keyword[words.getLength()];
+        String[] keywords = new String[words.getLength()];
         for (int i = 0; i < words.getLength(); i++) {
-            String word = words.item(i).getTextContent();
-            String relevance = relevances.item(i).getTextContent();
-            Keyword keyword = new Keyword(word, Double.parseDouble(relevance));
+            String keyword = words.item(i).getTextContent();
             keywords[i] = keyword;
         }
 
