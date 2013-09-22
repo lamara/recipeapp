@@ -25,6 +25,11 @@ public abstract class Recipe {
         return instructions;
     }
 
+    public ArrayList<String> getIngredientStrings() {
+        return ingredientStrings;
+    }
+
+
     protected abstract ArrayList<Ingredient> createIngredientList(Document document) throws IOException;
     protected abstract ArrayList<String> createInstructionList(Document document) throws IOException;
 
