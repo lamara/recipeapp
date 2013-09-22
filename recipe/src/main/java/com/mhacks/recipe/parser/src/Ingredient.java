@@ -20,7 +20,7 @@ public abstract class Ingredient
 
 
 
-    protected static final Set<String> UNITS = initUnits();
+    public static final Set<String> UNITS = initUnits();
     // --- Methods ---
 
     /**
@@ -66,10 +66,12 @@ public abstract class Ingredient
         set.add("L");
         set.add("kilogram"); // PL
         set.add("kg");
-        set.add("teaspoon"); // PL
+        set.add("teaspoon");
+        set.add("teaspoons");// PL
         set.add("tsp"); // PL
         set.add("dessert spoon"); // PL
         set.add("tablespoon"); // PL
+        set.add("tablespoons");
         set.add("tbsp"); // PL
         set.add("\"");
         set.add("inch");
@@ -77,6 +79,8 @@ public abstract class Ingredient
         set.add("in");
         set.add("centimeter"); // PL
         set.add("cm");
+        set.add("clove");
+        set.add("cloves");
 
         return set;
     }

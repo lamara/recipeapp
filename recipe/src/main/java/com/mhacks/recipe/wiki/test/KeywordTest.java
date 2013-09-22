@@ -8,6 +8,8 @@ package com.mhacks.recipe.wiki.test;
         import org.xml.sax.SAXException;
         import org.w3c.dom.Document;
         import java.io.*;
+        import java.util.Set;
+
         import javax.xml.parsers.ParserConfigurationException;
         import javax.xml.xpath.XPathExpressionException;
         import javax.xml.transform.Transformer;
@@ -33,9 +35,8 @@ class KeywordTest {
                         "Where do you live, Fred?");
         System.out.println(getStringFromDocument(doc));
 
-        Keyword[] keywords = Keyword.getKeywordsFromText("Hello there, my name is Bob Jones.  I live in the United States of America.  " +
-                "Where do you live, Fred?");
-        for (Keyword keyword : keywords) {
+        Set<String> keywords = Keyword.getKeywordsFromText("3 eggs, lightly beaten with 1 tablespoon sesame oil");
+        for (String keyword : keywords) {
             System.out.println(keyword);
         }
     }

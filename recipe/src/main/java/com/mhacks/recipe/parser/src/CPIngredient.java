@@ -46,10 +46,10 @@ public class CPIngredient extends Ingredient
             boolean capturingIngredient = false;
 
             String ingredient = "";
-            String[] strings = input.split(" ");
+            String[] delimitedInput = input.split(" ");
             //carats preceed and end the ingredient, for ex. "2 loaves of ^italian bread^"
-            for (int i = 0; i < strings.length; i++) {
-                String word = strings[i];
+            for (int i = 0; i < delimitedInput.length; i++) {
+                String word = delimitedInput[i];
                 if (word.endsWith("^")) {
                     if (index == -1) {
                         //if index hasn't been set yet then set it
@@ -72,8 +72,25 @@ public class CPIngredient extends Ingredient
         }
         else
         {
+            String ingredient = "";
             Set<String> keys = Keyword.getKeywordsFromText(input);
-            return null;
+            //take the set of keywords, and assume that the very first occurrence of one of the key
+            //words that isn't a unit of measurement will be the ingredient.
+            int index = -1;
+            String[] delimitedInput = input.split(" ");
+            for (int i = 0; i < delimitedInput.length; i++) {
+                String word = delimitedInput[i];
+                for (String keyword : keys) {
+                    if (keyword.split(" ")[0].equals(word)) { //whole word only
+                        index = i;
+                        ingredient = keyword;
+                        break;
+                    }
+                }
+
+            }
+
+            return new AbstractMap.SimpleEntry<String, Integer>(ingredient.trim(), index);
         }
     }
 
@@ -109,8 +126,7 @@ public class CPIngredient extends Ingredient
 
     private static boolean isNumeric(String string) {
         string = string.toLowerCase();
-        //&frac12
-        //test to see if string is a markup fraction
+        //test to see if string is a markup fraction of the form &frac12
         if (string.startsWith("&") && string.contains("frac") && string.length() == 7) {
             return true;
         }

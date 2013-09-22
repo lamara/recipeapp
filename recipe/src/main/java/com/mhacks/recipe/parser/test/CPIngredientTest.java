@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
+import javax.xml.xpath.XPathExpressionException;
 
 import static org.junit.Assert.*;
 
@@ -43,7 +44,7 @@ public class CPIngredientTest {
         this.setUp1();
         currentIngt = new CPIngredient(currentIngtList.get(0));
         assertEquals("900 ml", currentIngt.getQuantity());
-        assertEquals("chicken stock", currentIngt.getName());
+        assertEquals("chicken stock", currentIngt.getIngredient());
     }
 
     @Test
@@ -53,7 +54,7 @@ public class CPIngredientTest {
         this.setUp1();
         currentIngt = new CPIngredient(currentIngtList.get(1));
         assertEquals("1 tablespoon", currentIngt.getQuantity());
-        assertEquals("groundnut oil", currentIngt.getName());
+        assertEquals("groundnut oil", currentIngt.getIngredient());
     }
 
     @Test
@@ -63,7 +64,7 @@ public class CPIngredientTest {
         this.setUp1();
         currentIngt = new CPIngredient(currentIngtList.get(2));
         assertEquals("225 g (8oz)", currentIngt.getQuantity());
-        assertEquals("dried egg noodles", currentIngt.getName());
+        assertEquals("dried egg noodles", currentIngt.getIngredient());
     }
 
     @Test
@@ -73,7 +74,7 @@ public class CPIngredientTest {
         this.setUp1();
         currentIngt = new CPIngredient(currentIngtList.get(3));
         assertEquals("1/2 teaspoon", currentIngt.getQuantity());
-        assertEquals("sesame oil", currentIngt.getName());
+        assertEquals("sesame oil", currentIngt.getIngredient());
     }
 
     @Test
@@ -83,7 +84,7 @@ public class CPIngredientTest {
         this.setUp1();
         currentIngt = new CPIngredient(currentIngtList.get(4));
         assertEquals("4", currentIngt.getQuantity());
-        assertEquals("spring onions", currentIngt.getName());
+        assertEquals("spring onions", currentIngt.getIngredient());
     }
 
     @Test
@@ -93,7 +94,7 @@ public class CPIngredientTest {
         this.setUp1();
         currentIngt = new CPIngredient(currentIngtList.get(5));
         assertEquals("2 slices", currentIngt.getQuantity());
-        assertEquals("ginger", currentIngt.getName());
+        assertEquals("ginger", currentIngt.getIngredient());
     }
 
     @Test
@@ -103,7 +104,7 @@ public class CPIngredientTest {
         this.setUp1();
         currentIngt = new CPIngredient(currentIngtList.get(6));
         assertEquals("1 tablespoon", currentIngt.getQuantity());
-        assertEquals("oyster sauce", currentIngt.getName());
+        assertEquals("oyster sauce", currentIngt.getIngredient());
     }
 
     @Test
@@ -122,28 +123,28 @@ public class CPIngredientTest {
     }
 
     @Test
-    public void testExtractQuantity3() {
+    public void testExtractQuantity3() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException{
         String string = "a clove of ^garlic^";
         System.out.println("parsed: " + CPIngredient.getQuantity(string, 3));
         assertEquals(CPIngredient.getQuantity(string, 3), "clove of");
     }
 
     @Test
-    public void testExtractQuantity4() {
-        String string = "1 medium ^onion^";
+    public void testExtractQuantity4() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException{
+        String string = "1 medium ^onion^ ";
         System.out.println("parsed: " + CPIngredient.getQuantity(string, 2));
         assertEquals(CPIngredient.getQuantity(string, 2), "1 medium");
     }
 
     @Test
-    public void testExtractQuantity5() {
+    public void testExtractQuantity5() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
         String string = "a cup of tea";
         System.out.println("parsed: " + CPIngredient.getQuantity(string, 3));
         assertEquals(CPIngredient.getQuantity(string, 3), "cup of");
     }
 
     @Test
-    public void testGetIngredient() {
+    public void testGetIngredient() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
         String string = "3 tablespoons ^vegetable oil^";
         System.out.println("parsed: " + CPIngredient.getIngredient(string).getKey());
         assertEquals(CPIngredient.getIngredient(string).getKey(), "vegetable oil");
@@ -151,7 +152,7 @@ public class CPIngredientTest {
     }
 
     @Test
-    public void testGetIngredient2() {
+    public void testGetIngredient2() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
         String string = "around four tablespoons of ^vegetable oil^";
         System.out.println("parsed: " + CPIngredient.getIngredient(string).getKey());
         assertEquals(CPIngredient.getIngredient(string).getKey(), "vegetable oil");
@@ -159,7 +160,7 @@ public class CPIngredientTest {
     }
 
     @Test
-    public void testGetIngredient3() {
+    public void testGetIngredient3() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
         String string = "a clove of ^garlic^";
         System.out.println("parsed: " + CPIngredient.getIngredient(string).getKey());
         assertEquals(CPIngredient.getIngredient(string).getKey(), "garlic");
@@ -167,7 +168,7 @@ public class CPIngredientTest {
     }
 
     @Test
-    public void testGetIngredient4() {
+    public void testGetIngredient4() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
         String string = "1 medium ^onion^";
         System.out.println("parsed: " + CPIngredient.getIngredient(string).getKey());
         assertEquals(CPIngredient.getIngredient(string).getKey(), "onion");
@@ -176,10 +177,51 @@ public class CPIngredientTest {
     }
 
     @Test
-    public void testGetIngredient5() {
+    public void testGetIngredient5() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
         String string = "a cup of ^steaming hot tea^";
         System.out.println("parsed: " + CPIngredient.getIngredient(string).getKey());
         assertEquals(CPIngredient.getIngredient(string).getKey(), "steaming hot tea");
         assertEquals(CPIngredient.getIngredient(string).getValue(), new Integer(3));
+    }
+
+    @Test
+    public void testGetIngredientNoCarat() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
+        String string = "3 tablespoons vegetable oil";
+        System.out.println("parsed: " + CPIngredient.getIngredient(string).getKey());
+        assertEquals(CPIngredient.getIngredient(string).getKey(), "vegetable oil");
+        assertEquals(CPIngredient.getIngredient(string).getValue(), new Integer(2));
+    }
+
+    @Test
+    public void testGetIngredientNoCarat2() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
+        String string = "around four tablespoons of vegetable oil";
+        System.out.println("parsed: " + CPIngredient.getIngredient(string).getKey());
+        assertEquals(CPIngredient.getIngredient(string).getKey(), "vegetable oil");
+        assertEquals(CPIngredient.getIngredient(string).getValue(), new Integer(4));
+    }
+
+    @Test
+    public void testGetIngredientNoCarat3() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
+        String string = "a clove of garlic";
+        System.out.println("parsed: " + CPIngredient.getIngredient(string).getKey());
+        assertEquals(CPIngredient.getIngredient(string).getKey(), "");
+        assertEquals(CPIngredient.getIngredient(string).getValue(), new Integer(-1));
+    }
+
+    @Test
+    public void testGetIngredientNoCarat4() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
+        String string = "1 medium onion";
+        System.out.println("parsed: " + CPIngredient.getIngredient(string).getKey());
+        assertEquals(CPIngredient.getIngredient(string).getKey(), "medium onion");
+        assertEquals(CPIngredient.getIngredient(string).getValue(), new Integer(1));
+
+    }
+
+    @Test
+    public void testGetIngredientNoCarat5() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
+        String string = "a cup of steaming hot tea";
+        System.out.println("parsed: " + CPIngredient.getIngredient(string).getKey());
+        assertEquals(CPIngredient.getIngredient(string).getKey(), "hot tea");
+        assertEquals(CPIngredient.getIngredient(string).getValue(), new Integer(4));
     }
 }

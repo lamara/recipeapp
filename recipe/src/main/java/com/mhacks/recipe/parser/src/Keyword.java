@@ -7,6 +7,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -67,13 +68,21 @@ public class Keyword {
 
     private static String[] getKeywordsFromDocument(Document document) {
         NodeList words = document.getElementsByTagName("text");
-        String[] keywords = new String[words.getLength()];
+        ArrayList<String> keywords = new ArrayList<String>(words.getLength());
         for (int i = 0; i < words.getLength(); i++) {
             String keyword = words.item(i).getTextContent();
-            keywords[i] = keyword;
+            for (String innerKeyword : keyword.split(" ")) {
+                if (Ingredient.UNITS.contains(innerKeyword)) {
+                    //one of the keywords is a unit, so we don't want it.
+                    keyword = keyword.replace(innerKeyword, "");
+                }
+            }
+            keyword = keyword.trim();
+            if (keyword.length() != 0) {
+                keywords.add(keyword);
+            }
         }
-
-        return keywords;
+        return keywords.toArray(new String[0]);
     }
 
     @Override
