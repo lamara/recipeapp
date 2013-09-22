@@ -50,7 +50,6 @@ public class CPRecipe extends Recipe {
     protected ArrayList<Ingredient> createIngredientList(Document document) {
         ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
         ArrayList<String> ingredientLines = WikiEndpoint.getIngredientList(document);
-        this.ingredientStrings = ingredientLines; //these are used in the 1st section of the app.
         for (String line : ingredientLines) {
             try {
                 ingredients.add(new CPIngredient(line));
@@ -64,6 +63,12 @@ public class CPRecipe extends Recipe {
                 e.printStackTrace();
             }
         }
+        //remove markup carats so the lines can be used in the app.
+        for (int i = 0; i < ingredientLines.size(); i++) {
+            String line = ingredientLines.get(i);
+            ingredientLines.set(i, line.replaceAll("\\^", ""));
+        }
+        this.ingredientStrings = ingredientLines;
         return ingredients;
     }
 
@@ -80,7 +85,7 @@ public class CPRecipe extends Recipe {
         for (String instruction : instructions) {
             for (Ingredient element : ingredients) {
                 String ingredient = element.getIngredient();
-                int index = instruction.indexOf(ingredient);
+                int index = instruction.indexOf(ingredient); //we get better results if we take the 2nd word in the ingredient
                 if (index != -1) {
                     System.out.println("Found a match! With ingredient " + ingredient + " at index " + i);
                     String firstHalf = instruction.substring(0, index);

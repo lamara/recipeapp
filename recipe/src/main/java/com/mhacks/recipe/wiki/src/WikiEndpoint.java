@@ -43,7 +43,7 @@ public class WikiEndpoint {
         search = sanitizeInput(search);
         search = URLEncoder.encode(search, "UTF-8");
 
-        URL url = new URL(wikiUrl + "api.php?action=query&list=search&srsearch=" + search + "&srprop=timestamp&format=json");
+        URL url = new URL(wikiUrl + "api.php?action=query&list=search&srsearch=" + search + "&srprop=timestamp&limit=4&format=json");
         URLConnection connection = url.openConnection();
 
         String json = readFromInput(connection.getInputStream());

@@ -1,0 +1,7 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/step"
+    android:text="1"
+    android:textSize="18dip"
+    android:textStyle="bold"
+    android:layout_width="300dip"
+    android:layout_height="55dip"/>

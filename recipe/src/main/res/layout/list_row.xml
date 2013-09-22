@@ -7,7 +7,7 @@
     android:padding="5dip" >
 
     <!--  ListRow Left sied Thumbnail image -->
-    <LinearLayout android:id="@+id/step"
+    <LinearLayout android:id="@+id/step_parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="3dip"
@@ -18,9 +18,9 @@
         <TextView
             android:id="@+id/step"
             android:text="1"
-            android:textSize="30dip"
-            android:layout_width="40dip"
-            android:layout_height="50dip"/>
+            android:textSize="25dip"
+            android:layout_width="35dip"
+            android:layout_height="35dip"/>
 
     </LinearLayout>
     <!-- Artist Name -->
@@ -29,10 +29,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#343434"
-        android:textSize="10dip"
+        android:textSize="15dip"
         android:layout_marginTop="1dip"
-        android:layout_toRightOf="@+id/step"
-        android:text="Just gona stand there and ..." />
+        android:layout_toRightOf="@+id/step_parent"
+        android:text="Just gona stand there and ..."
+        android:layout_alignParentEnd="false"
+        android:layout_toLeftOf="@+id/timer" />
 
     <!-- Rightend Duration -->
     <TextView
@@ -44,9 +46,9 @@
         android:text="5:45"
         android:layout_marginTop="8dip"
         android:layout_marginRight="5dip"
-        android:textSize="35dip"
+        android:textSize="20dip"
         android:textColor="#10bcc9"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:textStyle="bold"/>
 
 </RelativeLayout>

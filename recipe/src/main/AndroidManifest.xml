@@ -24,6 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.mhacks.recipe.InstructionActivity"
+            android:label="instruction" ></activity>
+        <activity
+            android:name="com.mhacks.recipe.AlarmReceiverActivity"
+            android:label="alarm" ></activity>
     </application>
 
 </manifest>

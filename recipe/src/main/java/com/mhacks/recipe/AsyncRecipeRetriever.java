@@ -17,11 +17,11 @@ import java.io.IOException;
  */
 public class AsyncRecipeRetriever extends AsyncTask<Object, Void, Recipe> {
 
-    private MainActivity mainActivity;
+    private InstructionActivity instructionActivity;
 
     @Override
     protected Recipe doInBackground(Object... params) {
-        mainActivity = (MainActivity) params[0];
+        instructionActivity = (InstructionActivity) params[0];
         String title = (String) params[1];
 
         Recipe recipe = null;
@@ -38,6 +38,7 @@ public class AsyncRecipeRetriever extends AsyncTask<Object, Void, Recipe> {
 
     @Override
     protected void onPostExecute(Recipe result) {
-        mainActivity.recipeCallBack(result);
+        instructionActivity.recipeCallBack(result);
     }
+
 }
