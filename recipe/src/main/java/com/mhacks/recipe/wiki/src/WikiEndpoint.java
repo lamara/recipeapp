@@ -31,9 +31,6 @@ public class WikiEndpoint {
     private static final String INGREDIENT_TAG = "ingredients";
     private static final String INSTRUCTION_TAG = "recipeInstructions";
 
-    public static void main(String[] args) {
-        System.out.println("hey");
-    }
     /**
      * Searches
      * @param search keyword(s) to search.
@@ -76,7 +73,6 @@ public class WikiEndpoint {
 
         JSONObject pages = json.optJSONObject("query").optJSONObject("pages");
 
-        System.out.println(pages);
 
         Iterator keys = pages.keys();
 
@@ -92,7 +88,6 @@ public class WikiEndpoint {
         String html = page.optJSONArray("revisions").optJSONObject(0).optString("*");
 
         Document document = Jsoup.parse(html);
-        System.out.println(document);
 
         return document;
     }
@@ -104,7 +99,6 @@ public class WikiEndpoint {
         //all of the text bodies in between the "ingredients" and "mis en place" or "method" headers,
         //depending on whether or not mis en place exists in the recipe
         Elements ingredients = document.select("span[itemprop$=" + INGREDIENT_TAG + "]");
-        System.out.println("size: " + ingredients.size());
 
 
         ArrayList<String> results = new ArrayList<String>(ingredients.size());
@@ -119,7 +113,6 @@ public class WikiEndpoint {
             }
 
             results.add(line);
-            System.out.println(line);
         }
 
 
@@ -132,19 +125,9 @@ public class WikiEndpoint {
 
 
         Elements ingredients = document.select("span[itemprop$=" + INSTRUCTION_TAG + "]");
-        //sometimes recipes have multiple sub recipes, but that's hard to parse so lets only take the
-        //first recipe in the document. This can horribly break though on some recipe types.
-        /*
-        Element first = ingredients.first();
-        System.out.println("First: " + first);
-        System.out.println("Parent: " + first.parent());
-        ingredients = first.parent().siblingElements();
-        ingredients.add(0, first); //siblings don't include the original element
-        */
 
         for (Element element : ingredients) {
             results.add(element.text());
-            System.out.println(element.text());
         }
         return results;
     }
@@ -171,7 +154,6 @@ public class WikiEndpoint {
             if (line.contains("<li>")) {
                 String instruction = Jsoup.parse(line).text();
                 results.add(instruction);
-                System.out.println(instruction);
             }
             miseEnPlaceIndex++;
             line = lines[miseEnPlaceIndex];

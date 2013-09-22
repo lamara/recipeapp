@@ -11,7 +11,7 @@ import java.util.*;
  * @version 9/21/13
  */
 
-public abstract class Ingredient
+public abstract class Ingredient implements Comparable<Ingredient>
 {
     // --- Fields ---
 
@@ -83,5 +83,14 @@ public abstract class Ingredient
         set.add("cloves");
 
         return set;
+    }
+    @Override
+    public String toString() {
+        return getQuantity() + " " + getIngredient();
+    }
+
+    @Override
+    public int compareTo(Ingredient cmpr) {
+        return this.getIngredient().compareTo(cmpr.getIngredient());
     }
 }
